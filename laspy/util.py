@@ -88,7 +88,7 @@ class Spec():
             self.overwritable = overwritable
             self.idx = idx
         else:
-            raise(LaspyException("Big endian files are not currently supported."))
+            raise LaspyException
     def etree(self):
         spec = etree.Element("spec")
         name = etree.SubElement(spec, "name")
@@ -123,8 +123,8 @@ class Format():
         try:
             self._etree = etree.Element("Format")
         except:
-            print("There was an error initializing the etree instance, XML and " + 
-                   " Etree methods may throw exceptions.")
+            print(("There was an error initializing the etree instance, XML and " + 
+                   " Etree methods may throw exceptions."))
             self._etree = False
         self.specs = []
         self.rec_len = 0

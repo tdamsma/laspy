@@ -71,8 +71,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'laspy'
-copyright = u'2012, Grant Brown, Howard Butler'
+project = 'laspy'
+copyright = '2012, Grant Brown, Howard Butler'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -214,8 +214,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'laspy.tex', u'laspy Documentation',
-   u'Grant Brown, Howard Butler', 'manual'),
+  ('index', 'laspy.tex', 'laspy Documentation',
+   'Grant Brown, Howard Butler', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -244,8 +244,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'laspy', u'laspy Documentation',
-     [u'Grant Brown, Howard Butler'], 1)
+    ('index', 'laspy', 'laspy Documentation',
+     ['Grant Brown, Howard Butler'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -258,8 +258,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'laspy', u'laspy Documentation',
-   u'Grant Brown, Howard Butler', 'laspy', 'One line description of project.',
+  ('index', 'laspy', 'laspy Documentation',
+   'Grant Brown, Howard Butler', 'laspy', 'One line description of project.',
    'Miscellaneous'),
 ]
 

@@ -23,18 +23,18 @@ class lasexplorer():
     def setup(self):
     # Check mode
         if self.args.mode =="rw":
-            print("Mode = %s, changes to file will be committed to disk." % self.args.mode)
+            print(("Mode = %s, changes to file will be committed to disk." % self.args.mode))
         elif self.args.mode != "r":
-            print("Warning: invalud mode: " + self.args.mode)
+            print(("Warning: invalud mode: " + self.args.mode))
 
     # Try to read in file
-        print("Reading: " + self.args.in_file[0])
+        print(("Reading: " + self.args.in_file[0]))
         try:
             inFile = laspy.file.File(self.args.in_file[0], mode = self.args.mode)
             self.inFile = inFile
             READ_SUCCESS = True
             print("Read successful, file object is called inFile")
-        except Exception, error:
+        except Exception as error:
             print("Error while reading file:")
             print(error)
             READ_SUCCESS = False
@@ -43,19 +43,19 @@ class lasexplorer():
 
         if READ_SUCCESS and not self.args.q:
             print("LAS File Summary:")
-            print("File Version: " + str(inFile.header.version))
-            print("Point Format: " + str(inFile.header.data_format_id))
-            print("Number of Point Records: " + str(len(inFile)))
+            print(("File Version: " + str(inFile.header.version)))
+            print(("Point Format: " + str(inFile.header.data_format_id)))
+            print(("Number of Point Records: " + str(len(inFile))))
             print("Point Dimensions: ")
             for dim in inFile.point_format:
-                print("    " + dim.name)
+                print(("    " + dim.name))
         
     def explore(self):
         inFile = self.inFile
         interp = code.InteractiveConsole(locals={"inFile":inFile}) 
         try:
             interp.interact()
-        except KeyboardInterrupt, SystemExit:
+        except KeyboardInterrupt as SystemExit:
             quit()
 
 def main():

@@ -39,7 +39,7 @@ class lascopy():
         point_format = self.args.point_format[0]
         try:
             inFile = laspy.file.File(self.args.in_file[0], mode = "r")
-        except Exception, error:
+        except Exception as error:
             print("There was an error reading in the input file: ")
             print(error)
             quit()
@@ -66,18 +66,18 @@ class lascopy():
         SUB_BYTE_COMPATABLE = (old_point_format <= 5) == (point_format <= 5)
 
         ## Tell the user what we're doing. 
-        print("Input File: " + self.args.in_file[0] + ", %i point records." % len(inFile))
-        print("Output File: " + self.args.out_file[0])
-        print("Converting from file version %s to version %s." %(old_file_version, file_version)) 
-        print("Converting from point format %i to format %i."%(old_point_format, point_format))
+        print(("Input File: " + self.args.in_file[0] + ", %i point records." % len(inFile)))
+        print(("Output File: " + self.args.out_file[0]))
+        print(("Converting from file version %s to version %s." %(old_file_version, file_version))) 
+        print(("Converting from point format %i to format %i."%(old_point_format, point_format)))
 
         ## Warn the user if they chose potentially incompatable point formats and didn't specify -b=True
         if (not SUB_BYTE_COMPATABLE) and (not PRESERVE):
-            print("""WARNING: The sub-byte sized fields differ between point formats 
+            print(("""WARNING: The sub-byte sized fields differ between point formats 
                     %i and %i. By default this information will be lost. If you want 
                     laspy to try to preserve as much as possible, specify -b=True, though 
                     this may be quite slow depending on the size of the dataset.""" 
-                    % (old_point_format, point_format))
+                    % (old_point_format, point_format)))
 
 
         ## Build the new header, check if we need to do anythin special. This includes:
@@ -110,7 +110,7 @@ class lascopy():
             outFile = laspy.file.File(self.args.out_file[0], header = new_header, mode = "w", vlrs = inFile.header.vlrs, evlrs = evlrs)
             if outFile.point_format.rec_len != outFile.header.data_record_length:
                 pass
-        except Exception, error:
+        except Exception as error:
             print("There was an error instantiating the output file.")
             print(error)
             quit()
@@ -124,7 +124,7 @@ class lascopy():
                         "classification_flags", "classification_byte", "flag_byte")):
                         continue
                     outFile.writer.set_dimension(dimension.name, inFile.reader.get_dimension(dimension.name))
-                    print("Copying: " + dimension.name)
+                    print(("Copying: " + dimension.name))
             ## Do we need to do anything special for sub-byte fields?
             if (not SUB_BYTE_COMPATABLE and PRESERVE):
                 # Are we converting down or up?
@@ -142,12 +142,12 @@ class lascopy():
                 else:
                     try:
                         outFile.classification = inFile.classification
-                    except Exception, error:
+                    except Exception as error:
                         print("Error, couldnt set classification.")
                         print(error)
                     try:
                         outFile.return_num = inFile.return_num
-                    except Exception, error:
+                    except Exception as error:
                         print("Error, coun't set return number.")
                         print(error)
                     try:
@@ -161,7 +161,7 @@ class lascopy():
                     outFile.withheld = inFile.withheld
 
 
-        except Exception, error:
+        except Exception as error:
             print("Error copying data.")
             print(error)
             quit()

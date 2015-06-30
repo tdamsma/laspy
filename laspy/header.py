@@ -1,6 +1,6 @@
 import datetime
 import uuid
-import util
+from . import util
 import struct
 import copy
 import numpy as np
@@ -47,7 +47,7 @@ class ParseableVLR():
                 print("WARNING: Invalid body length for GeoKeyDictionaryTag, Not parsing.")
                 self.body_fmt = None
                 return
-            for sKeyEntry in xrange(bytes_left/8):
+            for sKeyEntry in range(bytes_left/8):
                 self.body_fmt.add("wKeyId_%i" % sKeyEntry, "ctypes.c_ushort", 1)
                 self.body_fmt.add("wTIFFTagLocation_%i" % sKeyEntry, "ctypes.c_ushort", 1)
                 self.body_fmt.add("wCount_%i" % sKeyEntry, "ctypes.c_ushort", 1)
@@ -59,7 +59,7 @@ class ParseableVLR():
             if self.rec_len_after_header % 8 != 0:
                 print("WARNING: Invalid body length for GeoDoubleParamsTag, not parsing.")
                 return
-            for i in xrange(self.rec_len_after_header/8):
+            for i in range(self.rec_len_after_header/8):
                 self.body_fmt.add("param_%i" % i, "ctypes.c_double", 1)
 
         elif "LASF_Projection" in self.user_id and self.record_id == 34737:
@@ -73,7 +73,7 @@ class ParseableVLR():
             if self.rec_len_after_header % 16 != 0:
                 print("WARNING: Invalid body length for classification lookup, not parsing.")
                 return
-            for i in xrange(self.rec_len_after_header / 16):
+            for i in range(self.rec_len_after_header / 16):
                 self.body_fmt.add("ClassNumber_%i", "ctypes.c_ubyte", 1)
                 self.body_fmt.add("Description_%i", "ctypes.c_char", 15)
 
@@ -83,7 +83,7 @@ class ParseableVLR():
             if self.rec_len_after_header % 257 != 0:
                 print("WARNING: Invalid body length for header flight line lookup, not parsing.")
                 return
-            for i in xrange(self.rec_len_after_header / 257):
+            for i in range(self.rec_len_after_header / 257):
                 self.body_fmt.add("FileMarkerNumber_%i", "ctypes.c_ubyte", 1)
                 self.body_fmt.add("Filename_%i", "ctypes.c_char", 256)
 
@@ -117,7 +117,7 @@ class ParseableVLR():
             raise util.LaspyException("Not a known VLR/EVLR type, can't pack parsed_body")
         try:
             packed = struct.pack(self.body_fmt.pt_fmt_long, *self.parsed_body)
-        except Exception, error:    
+        except Exception as error:    
             print("Error packing VLR data, using current raw vlr body.")
             print(error)
             packed = self.VLR_body
@@ -130,7 +130,7 @@ class ParseableVLR():
         idx = 0
         for i in self.body_fmt:
             out = str(self.parsed_body[idx])
-            print(i.name + ": " + (20-len(i.name))*" "  + out)
+            print((i.name + ": " + (20-len(i.name))*" "  + out))
             idx += 1
 
 class ExtraBytesStruct(object):
@@ -305,7 +305,7 @@ class EVLR(ParseableVLR):
             self.setup_extra_bytes_spec(self.VLR_body)
         try:
             self.parse_data()
-        except Exception, err:
+        except Exception as err:
             print("Error Parsing EVLR Body Data:")
             print(err)
 
@@ -317,7 +317,7 @@ class EVLR(ParseableVLR):
                                      specification, must be multiple of 192.""")
         else:
             recs = self.rec_len_after_header / 192
-            for i in xrange(recs):
+            for i in range(recs):
                 new_rec = ExtraBytesStruct()
                 new_rec.build_from_vlr(self, i)
             self.add_extra_dim(new_rec)
@@ -339,7 +339,7 @@ class EVLR(ParseableVLR):
         self.fmt = reader.evlr_formats
         try:
             self.parse_data()
-        except Exception, err:
+        except Exception as err:
             print("Error Parsing EVLR Body Data:")
             print(err)
 
@@ -407,7 +407,7 @@ class VLR(ParseableVLR):
             self.setup_extra_bytes_spec(self.VLR_body)
         try:
             self.parse_data()
-        except Exception, err:
+        except Exception as err:
             print("Error Parsing VLR Body Data:")
             print(err)
 
@@ -429,7 +429,7 @@ class VLR(ParseableVLR):
         self.fmt = reader.vlr_formats
         try:
             self.parse_data()
-        except Exception, err:
+        except Exception as err:
             print("Error Parsing EVLR Body Data:")
             print(err)
 
@@ -444,7 +444,7 @@ class VLR(ParseableVLR):
                                      specification, must be multiple of 192.""")
         else:
             recs = self.rec_len_after_header / 192
-            for i in xrange(recs):
+            for i in range(recs):
                 new_rec = ExtraBytesStruct()
                 new_rec.build_from_vlr(self, i) 
                 self.add_extra_dim(new_rec)
@@ -497,7 +497,7 @@ class Header(object):
         kwargs["version_minor"] = str(file_version)[2]
         self._format = fmt
         for dim in self._format.specs:
-            if dim.name in kwargs.keys():
+            if dim.name in list(kwargs.keys()):
                 self.__dict__[dim.name] = kwargs[dim.name]
             else:
                 self.__dict__[dim.name] = dim.default
@@ -511,12 +511,12 @@ class Header(object):
         self.version_minor = str(file_version)[2]
         # Set defaults for newly available fields.
         for item in new_format.specs:
-            if not item.name in self.__dict__.keys():
+            if not item.name in list(self.__dict__.keys()):
                 self.__dict__[item.name] = item.default
 
         # Clear no longer available fields. 
         for item in self._format.specs:
-            if not item.name in new_format.lookup.keys(): 
+            if not item.name in list(new_format.lookup.keys()): 
                 self.__dict__[item.name] = None
         if str(file_version) == "1.4":
             self.point_return_count.extend([0]*10)
@@ -917,7 +917,7 @@ class HeaderManager(object):
 
     def set_dataformatid(self, value):
         '''Set the data format ID. This is only available for files in write mode which have not yet been given points.'''
-        if value not in range(6):
+        if value not in list(range(6)):
             raise LaspyHeaderException("Format ID must be 3, 2, 1, or 0")
         if not self.file_mode in ("w", "w+"):
             raise LaspyHeaderException("Point Format ID can only be set for " + 
@@ -1029,8 +1029,7 @@ class HeaderManager(object):
 
     def update_histogram(self):
         '''Update the histogram of returns by number'''
-        rawdata = map(lambda x: (x==0)*1 + (x!=0)*x, 
-                     self.writer.get_return_num())
+        rawdata = [(x==0)*1 + (x!=0)*x for x in self.writer.get_return_num()]
         #if self.version == "1.3":
         #    histDict = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0}
         #elif self.version in ["1.0", "1.1", "1.2"]:
@@ -1042,10 +1041,10 @@ class HeaderManager(object):
         #raw_hist = histDict.values()
         #if self.data_format_id in (range(6)):
         if self.version != "1.4":
-            raw_hist = np.histogram(rawdata, bins = range(1,7))
+            raw_hist = np.histogram(rawdata, bins = list(range(1,7)))
             
         else:
-            raw_hist = np.histogram(rawdata, bins = range(1,17)) 
+            raw_hist = np.histogram(rawdata, bins = list(range(1,17))) 
         #print("Raw Hist: " + str(raw_hist))
         #t = raw_hist[0][4]
         #for ret in [3,2,1,0]:

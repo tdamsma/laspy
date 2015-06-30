@@ -20,13 +20,13 @@ class lasview():
      
     def setup(self):
     # Check mode
-        print("Reading: " + self.args.in_file[0])
+        print(("Reading: " + self.args.in_file[0]))
         self.mode = self.args.mode
         self.dim = self.args.dimension
         try:
             inFile = laspy.file.File(self.args.in_file[0], mode = "r")
             self.inFile = inFile
-        except Exception, error:
+        except Exception as error:
             print("Error while reading file:")
             print(error)
             quit()

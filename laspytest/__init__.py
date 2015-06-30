@@ -1,1 +1,1 @@
-from test_laspy import test_laspy
+from .test_laspy import test_laspy

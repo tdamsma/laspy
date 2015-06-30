@@ -15,7 +15,7 @@ new_header.data_record_length = 50
 outFile = File.File(sys.argv[2],mode= "w",vlrs = inFile.header.vlrs, header = new_header)
 
 for dim in inFile.reader.point_format.specs:
-    print("Copying dimension: " + dim.name)
+    print(("Copying dimension: " + dim.name))
     in_dim = inFile.reader.get_dimension(dim.name)
     #try:
     outFile.writer.set_dimension(dim.name, in_dim)

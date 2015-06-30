@@ -30,7 +30,7 @@ class lasverify():
         try:
             inFile1 = laspy.file.File.File(file_1,mode= "r")
             inFile2 = laspy.file.File.File(file_2,mode= "r")
-        except Exception, error:
+        except Exception as error:
             print("Error reading in files:")
             print(error)
             quit()
@@ -49,9 +49,9 @@ class lasverify():
                     (this might take some time depending on the size of the file)""")
 
         def print_title(string):
-            print("#"*65)
-            print("#  " + string + " "*(65 - (len(string) + 4)) + "#")
-            print("#"*65)
+            print(("#"*65))
+            print(("#  " + string + " "*(65 - (len(string) + 4)) + "#"))
+            print(("#"*65))
 
     ## Define convenience function to try to compare point dimensions. 
         def f(x):
@@ -61,11 +61,11 @@ class lasverify():
                 outstr = "Dimension: %s" %x
                 outstr += " "*(50-len(outstr))
                 if not (x in inFile1.point_format.lookup) and (x in inFile2.point_format.lookup):
-                    print(outstr + "not present in file_1.")
+                    print((outstr + "not present in file_1."))
                 elif not (x in inFile2.point_format.lookup) and (x in inFile1.point_format.lookup):
-                    print(outstr + "not present in file_2.")
+                    print((outstr + "not present in file_2."))
                 else:
-                    print("There was an error comparing dimension: %s" + str(x))
+                    print(("There was an error comparing dimension: %s" + str(x)))
                 return(2)
 
     ## Define convenience function to try to compare header fields. 
@@ -76,11 +76,11 @@ class lasverify():
                 outstr = "Header Property: %s" % x
                 outstr += (" "*(50-len(outstr)))
                 if not (x in inFile1.header.header_format.lookup) and (x in inFile2.header.header_format.lookup):
-                    print(outstr + "not present in file_1.")
+                    print((outstr + "not present in file_1."))
                 elif not (x in inFile2.header.header_format.lookup) and (x in inFile1.header.header_format.lookup):
-                    print(outstr + "not present in file_2.")
+                    print((outstr + "not present in file_2."))
                 else:
-                    print("There was an error while comparing header property: %s" + str(x))
+                    print(("There was an error while comparing header property: %s" + str(x)))
                 return(2)
 
     ## Build union fo header fields, then check them.
@@ -98,14 +98,14 @@ class lasverify():
                 outstr += " "*(50-len(outstr))
                 result = g(item)
                 if result == 1:
-                    print(outstr + "identical")
+                    print((outstr + "identical"))
                     passed += 1
                 elif not result == 2:
-                    print(outstr + "different")
-                    print("   File 1: " + str(inFile1.reader.get_header_property(item)))
-                    print("   File 2: " + str(inFile2.reader.get_header_property(item)))
+                    print((outstr + "different"))
+                    print(("   File 1: " + str(inFile1.reader.get_header_property(item))))
+                    print(("   File 2: " + str(inFile2.reader.get_header_property(item))))
                     failed += 1
-            print("%i of %i header fields match." % (passed, passed + failed))
+            print(("%i of %i header fields match." % (passed, passed + failed)))
         except:
             print("There was an error while comparing headers. ")
 
@@ -114,17 +114,17 @@ class lasverify():
 
         try:
             if len(inFile1.header.vlrs) != len(inFile2.header.vlrs):
-                print("Number of VLRs differs: file_1 has %i and file_2 has %i. Comparing where possible..."
-                        % (len(inFile1.header.vlrs), len(inFile2.header.vlrs)))
-            for i in xrange(min(len(inFile1.header.vlrs), len(inFile2.header.vlrs))):
+                print(("Number of VLRs differs: file_1 has %i and file_2 has %i. Comparing where possible..."
+                        % (len(inFile1.header.vlrs), len(inFile2.header.vlrs))))
+            for i in range(min(len(inFile1.header.vlrs), len(inFile2.header.vlrs))):
                 outstr = "VLR Record: %i" %i
                 outstr += " "*(50 - len(outstr))
                 vlr1 = inFile1.header.vlrs[i].to_byte_string()
                 vlr2 = inFile2.header.vlrs[i].to_byte_string()
                 if vlr1 == vlr2:
-                    print(outstr + "identical")
+                    print((outstr + "identical"))
                 else:
-                    print(outstr + "different")
+                    print((outstr + "different"))
         except:
             print("There was a problem comparing VLRs")
 
@@ -132,26 +132,26 @@ class lasverify():
         print_title("Checking EVLRs")
         try:
             if len(inFile1.header.evlrs) != len(inFile2.header.evlrs):
-                print("Number of VLRs differs: file_1 has %i and file_2 has %i. Comparing where possible..."
-                        % (len(inFile1.header.evlrs), len(inFile2.header.evlrs)))
+                print(("Number of VLRs differs: file_1 has %i and file_2 has %i. Comparing where possible..."
+                        % (len(inFile1.header.evlrs), len(inFile2.header.evlrs))))
 
-            for i in xrange(min(len(inFile1.header.evlrs), len(inFile2.header.evlrs))):
+            for i in range(min(len(inFile1.header.evlrs), len(inFile2.header.evlrs))):
                 outstr = "EVLR Record: %i" %i
                 outstr += " "*(50 - len(outstr))
                 vlr1 = inFile1.header.evlrs[i].to_byte_string()
                 vlr2 = inFile1.header.evlrs[i].to_byte_string()
                 if vlr1 == vlr2:
-                    print(outstr + "identical")
+                    print((outstr + "identical"))
                 else:
-                    print(outstr + "different")
+                    print((outstr + "different"))
         except:
             print("There was a problem comparing EVLRs")
 
     ## Build a union of dimensions in each file, then compare them.
         dims = set()
-        for item in inFile1.reader.point_format.lookup.keys():
+        for item in list(inFile1.reader.point_format.lookup.keys()):
             dims.add(item)
-        for item in inFile2.reader.point_format.lookup.keys():
+        for item in list(inFile2.reader.point_format.lookup.keys()):
             dims.add(item)
         print_title("Checking Dimensions")
         passed = 0
@@ -164,19 +164,19 @@ class lasverify():
             result = f(dim)
             if result == 1:
                 passed += 1
-                print(outstr +  "identical")
+                print((outstr +  "identical"))
             elif result != 2:
                 failed += 1
-                print(outstr + "different")
+                print((outstr + "different"))
 
         def print_sb(string, result):
             outstr  ="Sub-byte field: " + string
             outstr += " "*(50-len(outstr))
             if result:
-                print(outstr + "identical")
+                print((outstr + "identical"))
                 return(1)
             else:
-                print(outstr + "different")
+                print((outstr + "different"))
                 return(0)
 
     ## If we need to, compare valid sub-byte fields
@@ -194,9 +194,9 @@ class lasverify():
 
 
     ## Print summary
-        print(str(passed) + " identical dimensions out of " + str(passed + failed))
+        print((str(passed) + " identical dimensions out of " + str(passed + failed)))
         if not SUB_BYTE_COMPATABLE and PRESERVE:
-            print("%i identical sub-byte fields out of %i" %(sb_total, 8))
+            print(("%i identical sub-byte fields out of %i" %(sb_total, 8)))
 
         inFile1.close()
         inFile2.close()

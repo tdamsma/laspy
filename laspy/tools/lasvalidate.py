@@ -45,10 +45,10 @@ class validate():
 
     def test1(self, inFile):
         print("Test 1: Checking that all points fall inside header bounding box: ")
-        bb = zip(["X", "Y", "Z"], inFile.header.min, inFile.header.max)
+        bb = list(zip(["X", "Y", "Z"], inFile.header.min, inFile.header.max))
         print("... Header bounding box:")
         for i in bb:
-            print("..." + str(i))
+            print(("..." + str(i)))
 
         bad_indices = self.bb(inFile, inFile.x, inFile.y, inFile.z)
 
@@ -57,14 +57,14 @@ class validate():
             if len(bad_indices[0]) == len(inFile):
                 new_bi = self.bb(inFile, inFile.X, inFile.Y, inFile.Z)[0]
                 if len(new_bi) < len(inFile):
-                    print("... Using unscaled values gives fewer invalid points: " + str(len(new_bi)) + ", header appears to use unscaled data.")
+                    print(("... Using unscaled values gives fewer invalid points: " + str(len(new_bi)) + ", header appears to use unscaled data."))
                     logging.info("Header appears to use unscaled data in max/min. This may follow spec, but is less common than using scaled data. ")
                 else:
                     print("... Bounding box appears to be invalid.")
                     logging.info("Bounding box appears to be invalid.")
                     
             else:
-                print("... printing bad indices to log: " + self.args.log)
+                print(("... printing bad indices to log: " + self.args.log))
                 for i in bad_indices[0]:
                     logging.info("Point outside header bounding box: %i" % i)
             self.errors += 1
@@ -84,14 +84,14 @@ class validate():
         for i in range(len(max_diffs)):
             if max_diffs[i] > self.args.tol:
                 err += 1
-                print("... " + ["X", "Y", "Z"][i] + " header max doesn't match actual max.")
-                print("...    actual max: " + str(actual_max[i]) + ", header max: " + str(header_max[i]))
+                print(("... " + ["X", "Y", "Z"][i] + " header max doesn't match actual max."))
+                print(("...    actual max: " + str(actual_max[i]) + ", header max: " + str(header_max[i])))
                 logging.info(["X", "Y", "Z"][i] + " header max doesn't match actual max at tolerance %s." %str(self.args.tol))
         for i in range(len(min_diffs)):
             if min_diffs[i] > self.args.tol:
                 err += 1
-                print("... " + ["X", "Y", "Z"][i] + " header min doesn't match actual min.")
-                print("...    actual min: " + str(actual_max[i]) + ", header min: " + str(header_max[i]))
+                print(("... " + ["X", "Y", "Z"][i] + " header min doesn't match actual min."))
+                print(("...    actual min: " + str(actual_max[i]) + ", header min: " + str(header_max[i])))
                 logging.info(["X", "Y", "Z"][i] + " header min doesn't match actual min at tolerance %s." %str(self.args.tol))
         if err == 0:
             print("... passed")
@@ -107,11 +107,11 @@ class validate():
         err = 0
         if X_range > 2000:
             err += 1
-            print("... X range may be unreasonable: " + str(X_range))
+            print(("... X range may be unreasonable: " + str(X_range)))
             logging.info("X range may be unreasonable: " + str(X_range))
         if Y_range > 2000:
             err += 1
-            print("... Y range may be unreasonable: " + str(Y_range))
+            print(("... Y range may be unreasonable: " + str(Y_range)))
             logging.info("Y range may be unreasonable: " + str(Y_range))
         if err == 0:
             print("... passed")
@@ -121,13 +121,13 @@ class validate():
         self.tests += 1
 
     def validate(self):
-        print("Reading in file: " + self.args.in_file[0])
+        print(("Reading in file: " + self.args.in_file[0]))
         inFile = laspy.file.File(self.args.in_file[0], mode = "r")
         self.test0(inFile)
         self.test1(inFile)
         self.test2(inFile)
         self.test3(inFile)
-        print(str(self.errors) + " errors out of " + str(self.tests) + " tests")
+        print((str(self.errors) + " errors out of " + str(self.tests) + " tests"))
 
 
 def main():
